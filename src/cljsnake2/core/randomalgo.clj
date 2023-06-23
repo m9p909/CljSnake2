@@ -1,5 +1,10 @@
-(ns cljsnake2.core.randomalgo)
+(ns cljsnake2.core.randomalgo
+  (:require [clojure.tools.logging :refer [info]]))
 
+(def data
+  (read-string
+   (slurp "./test/cljsnake2/core/cases.edn")))
+(def problem-req (-> data first :req))
 (def moves '(:up :right :down :left))
 
 (def moves-map {:up {:x 0 :y 1}
@@ -26,44 +31,44 @@
       (< (:y point) 0)))
 (is-out-of-bounds 11 11 {:x 11 :y 11})
 
-(defn get-my-head [board]
-  (:head (first (:snakes board))))
+(defn get-my-head [req]
+  (:head (:you req)))
 
-(defn remove-out-of-bounds-moves [height width head moves]
+(defn remove-out-of-bounds-moves [req moves]
   "takes (int int point move) and returns not out of bounds moves"
-  (filter #(not (is-out-of-bounds
-                 height width
-                 (apply-move head %)))
-          moves))
+  (let [board (:board req)
+        height (:height board)
+        width (:width board)
+        head (get-my-head req)]
+    (filter #(not (is-out-of-bounds
+                   height width
+                   (apply-move head %)))
+            moves)))
 
 (defn get-points-occupied-by-snakes [snakes]
   (set (flatten (map #(:body %) snakes))))
 
 (defn remove-snake-collision-moves
-  [head snakes moves]
-  (let [snake-points
+  [req moves]
+
+  (let [board (:board req)
+        snakes (:snakes board)
+        head (get-my-head req)
+        snake-points
         (get-points-occupied-by-snakes snakes)]
     (filter
-     #(not (contains? snake-points (apply-move head %)))
+     #(not
+       (contains? snake-points (apply-move head %)))
      moves)))
 
-(= (set (remove-snake-collision-moves
-         {:x 1 :y 2}
-         '({:body [{:x 1 :y 1} {:x 2 :y 2}]}
-           {:body [{:x 2 :y 3} {:x 4 :y 4}]})
-         moves)) #{:up :left})
+(defn printnpass [var]
+  (info (prn-str var)
+        var))
 
 (defn valid-moves [req]
-  (let [board (:board req)]
-    (->> moves
-         (remove-out-of-bounds-moves
-          (:height board)
-          (:width board)
-          (get-my-head board))
-         (remove-snake-collision-moves
-          (get-my-head board)
-          (:snakes board)))))
-
+  (->> moves
+       (remove-out-of-bounds-moves req)
+       (remove-snake-collision-moves req)))
 (defn rand-move  [req]
   (let [moves (valid-moves req)]
     (if (> (count moves) 0)

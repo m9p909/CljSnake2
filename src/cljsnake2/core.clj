@@ -10,19 +10,10 @@
   [x]
   (println x "Hello, World!"))
 
-(defn printnpass [v]
-  (println v)
-  v)
-
-(defn print-body [handler]
-  (fn [req]
-    (printnpass (handler req))))
-
 (def handler
   (middleware/wrap-format
-   (print-body
-    (logger/wrap-with-logger
-     (ring-handler (router home-routes))))))
+   (logger/wrap-with-logger
+    (ring-handler (router home-routes)))))
 
 (defn start []
   (run-jetty

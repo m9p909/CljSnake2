@@ -7,7 +7,7 @@
 (s/def :core/y int?)
 (s/def :core/point (s/keys :req-un [:core/x :core/y]))
 (s/def :core/body
-  (s/coll-of :core/point :kind vector? :distinct true))
+  (s/coll-of :core/point :kind vector? :distinct false))
 (s/def :core/head :core/point)
 (s/def :core/snake (s/keys  :req-un [:core/id
                                      :core/head
@@ -16,9 +16,9 @@
 (s/def :core/height int?)
 (s/def :core/width int?)
 (s/def :core/turn int?)
-(s/def :core/food (s/coll-of :core/point :kind vector? :distinct true))
-(s/def :core/hazards (s/coll-of :core/point :kind vector? :distinct true))
-(s/def :core/snakes (s/coll-of :core/snake :kind vector? :distinct true))
+(s/def :core/food (s/coll-of :core/point :kind vector? :distinct false))
+(s/def :core/hazards (s/coll-of :core/point :kind vector? :distinct false))
+(s/def :core/snakes (s/coll-of :core/snake :kind vector? :distinct false))
 (s/def :core/board (s/keys :req-un
                            [:core/height
                             :core/width
@@ -44,9 +44,11 @@
                                       :core/turn
                                       :core/board
                                       :core/you]))
-
 (defn validate-req [post]
   (s/valid? :core/request post))
+
+(defn explain-req [post]
+  (s/explain :core/request post))
 
 (s/def :core/move  #{:up :down :left :right})
 (s/def :core/shout string?)
