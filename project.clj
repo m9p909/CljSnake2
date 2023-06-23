@@ -9,8 +9,13 @@
                  [metosin/reitit "0.7.0-alpha5"]
                  [metosin/muuntaja "0.6.8"]
                  [ring/ring-devel "1.6.3"]
-                 [ring-logger "1.1.1"]]
+                 [ring-logger "1.1.1"]
+                 [org.clojure/core.async "1.6.673"]
+                 [org.clojure/tools.logging "1.2.4"]
+                 [org.clojure/data.json "2.4.0"]
+                 [metosin/muuntaja-yaml "0.6.8"]]
   :ring {:handler cljsnake2.core/handler}
   :repl-options {:init-ns cljsnake2.core}
   :plugins [[cider/cider-nrepl "0.24.0"]
-            [lein-ring "0.12.6"]])
+            [lein-ring "0.12.6"]
+            [dev.weavejester/lein-cljfmt "0.10.5"]])
