@@ -1,9 +1,6 @@
 (ns cljsnake2.core.randomalgo
   (:require [clojure.tools.logging :refer [info]]
-            [cljsnake2.core.general :refer [get-my-head]])))
-
-
-
+            [cljsnake2.core.general :refer [get-my-head valid-moves]]))
 
 (defn rand-move  [req]
   (let [moves (valid-moves req)]
